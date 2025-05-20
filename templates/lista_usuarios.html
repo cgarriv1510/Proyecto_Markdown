@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Clientes{% endblock %}
+
+{% block content %}
+    <h2>Clientes</h2>
+    <div class="clientes-container">
+        <ul>
+            {% for cliente in clientes %}
+            <li>
+                {{ cliente.nombre }} ({{ cliente.email }}) - 
+                {% if cliente.activo %}Activo{% else %}Inactivo{% endif %} - 
+                Pedidos: {{ cliente.pedidos }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div>
+        <p>
+            <strong>Clientes activos:</strong> {{ clientes_activos }}
+        </p>
+
+        <p>
+            <strong>Cliente con más pedidos:</strong> {{ cliente_top.nombre }} ({{ cliente_top.pedidos }} pedidos)
+        </p>
+    </div>
+    <div>
+        <a href="/clientes_nuevo">
+            <button class="boton-accion">
+                Añadir Productos
+            </button>
+        </a>
+    </div>
+{% endblock %}
