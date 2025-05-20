@@ -2,49 +2,49 @@
   {
     "nombre": "iPhone 14 Pro",
     "precio": 999,
-    "imagen": "https://example.com/images/iphone14pro.jpg",
+    "imagen": "images/61HHS0HrjpL._AC_UF1000,1000_QL80_.jpg",
     "stock": 25,
     "categoria": "Tecnología"
   },
   {
     "nombre": "MacBook Air M2",
     "precio": 1199,
-    "imagen": "https://example.com/images/macbookair.jpg",
+    "imagen": "images/IMG_5312.jpg",
     "stock": 15,
     "categoria": "Tecnología"
   },
   {
     "nombre": "Sofá de Esquina Lujoso",
     "precio": 750,
-    "imagen": "https://example.com/images/sofa.jpg",
+    "imagen": "images/Canape-haut-de-gamme-brown-sugar-16.jpg",
     "stock": 10,
     "categoria": "Hogar"
   },
   {
     "nombre": "Mesa de Comedor Nórdica",
     "precio": 450,
-    "imagen": "https://example.com/images/mesa.jpg",
+    "imagen": "images/09072020-162830mesadecomedorextensiblenordicaNORDIC.jpg",
     "stock": 20,
     "categoria": "Hogar"
   },
   {
     "nombre": "Zapatillas Nike Air Max",
     "precio": 120,
-    "imagen": "https://example.com/images/nikeair.jpg",
+    "imagen": "images/00117731203828____1__1200x1200.jpg",
     "stock": 35,
     "categoria": "Moda"
   },
   {
     "nombre": "Chaqueta Columbia Impermeable",
     "precio": 180,
-    "imagen": "https://example.com/images/chaqueta.jpg",
+    "imagen": "images/columbia-wyldwood-8.jpg",
     "stock": 18,
     "categoria": "Moda"
   },
   {
     "nombre": "LEGO Star Wars - Millennium Falcon",
     "precio": 160,
-    "imagen": "https://example.com/images/lego.jpg",
+    "imagen": "images/81SzQF7ff4L._AC_UF894,1000_QL80_.jpg",
     "stock": 12,
     "categoria": "Juguetes"
   },
