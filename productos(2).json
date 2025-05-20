@@ -1,0 +1,142 @@
+[
+  {
+    "nombre": "iPhone 14 Pro",
+    "precio": 999,
+    "imagen": "https://example.com/images/iphone14pro.jpg",
+    "stock": 25,
+    "categoria": "Tecnología"
+  },
+  {
+    "nombre": "MacBook Air M2",
+    "precio": 1199,
+    "imagen": "https://example.com/images/macbookair.jpg",
+    "stock": 15,
+    "categoria": "Tecnología"
+  },
+  {
+    "nombre": "Sofá de Esquina Lujoso",
+    "precio": 750,
+    "imagen": "https://example.com/images/sofa.jpg",
+    "stock": 10,
+    "categoria": "Hogar"
+  },
+  {
+    "nombre": "Mesa de Comedor Nórdica",
+    "precio": 450,
+    "imagen": "https://example.com/images/mesa.jpg",
+    "stock": 20,
+    "categoria": "Hogar"
+  },
+  {
+    "nombre": "Zapatillas Nike Air Max",
+    "precio": 120,
+    "imagen": "https://example.com/images/nikeair.jpg",
+    "stock": 35,
+    "categoria": "Moda"
+  },
+  {
+    "nombre": "Chaqueta Columbia Impermeable",
+    "precio": 180,
+    "imagen": "https://example.com/images/chaqueta.jpg",
+    "stock": 18,
+    "categoria": "Moda"
+  },
+  {
+    "nombre": "LEGO Star Wars - Millennium Falcon",
+    "precio": 160,
+    "imagen": "https://example.com/images/lego.jpg",
+    "stock": 12,
+    "categoria": "Juguetes"
+  },
+  {
+    "nombre": "Muñeca Barbie Dreamhouse",
+    "precio": 200,
+    "imagen": "https://example.com/images/barbie.jpg",
+    "stock": 14,
+    "categoria": "Juguetes"
+  },
+  {
+    "nombre": "Cafetera Nespresso Vertuo",
+    "precio": 99,
+    "imagen": "https://example.com/images/nespresso.jpg",
+    "stock": 30,
+    "categoria": "Electrodomésticos"
+  },
+  {
+    "nombre": "Robot Aspirador Roomba i3",
+    "precio": 299,
+    "imagen": "https://example.com/images/roomba.jpg",
+    "stock": 9,
+    "categoria": "Electrodomésticos"
+  },
+  {
+    "nombre": "Guitarra Acústica Fender FA-125",
+    "precio": 199,
+    "imagen": "https://example.com/images/guitarra.jpg",
+    "stock": 6,
+    "categoria": "Instrumentos"
+  },
+  {
+    "nombre": "Teclado Yamaha PSR-E373",
+    "precio": 270,
+    "imagen": "https://example.com/images/teclado.jpg",
+    "stock": 8,
+    "categoria": "Instrumentos"
+  },
+  {
+    "nombre": "Croquetas de Pollo (1kg)",
+    "precio": 8.99,
+    "imagen": "https://example.com/images/croquetas.jpg",
+    "stock": 50,
+    "categoria": "Alimentos"
+  },
+  {
+    "nombre": "Salmón Ahumado Noruego (200g)",
+    "precio": 5.5,
+    "imagen": "https://example.com/images/salmon.jpg",
+    "stock": 40,
+    "categoria": "Alimentos"
+  },
+  {
+    "nombre": "Bicicleta de Montaña Rockrider",
+    "precio": 399,
+    "imagen": "https://example.com/images/bicicleta.jpg",
+    "stock": 7,
+    "categoria": "Deportes"
+  },
+  {
+    "nombre": "Raqueta de Tenis Wilson",
+    "precio": 89,
+    "imagen": "https://example.com/images/raqueta.jpg",
+    "stock": 13,
+    "categoria": "Deportes"
+  },
+  {
+    "nombre": "Set de Brochas de Maquillaje Real Techniques",
+    "precio": 25,
+    "imagen": "https://example.com/images/brochas.jpg",
+    "stock": 27,
+    "categoria": "Belleza"
+  },
+  {
+    "nombre": "Paleta de Sombras Naked Urban Decay",
+    "precio": 55,
+    "imagen": "https://example.com/images/sombras.jpg",
+    "stock": 16,
+    "categoria": "Belleza"
+  },
+  {
+    "nombre": "Libro 'Sapiens' de Yuval Noah Harari",
+    "precio": 19.99,
+    "imagen": "https://example.com/images/sapiens.jpg",
+    "stock": 22,
+    "categoria": "Libros"
+  },
+  {
+    "nombre": "Libro 'El poder del ahora' de Eckhart Tolle",
+    "precio": 14.99,
+    "imagen": "https://example.com/images/poderahora.jpg",
+    "stock": 24,
+    "categoria": "Libros"
+  }
+]
