@@ -2,7 +2,9 @@ from flask import Flask, render_template, request, redirect, flash
 from datetime import date
 from pymongo import MongoClient
 from models.productos import Producto
+from models.clientes import Cliente
 from bson.objectid import ObjectId
+
 
 app = Flask(__name__)
 app.secret_key= "Password" #Es necesario para usar flash
@@ -11,7 +13,7 @@ app.secret_key= "Password" #Es necesario para usar flash
 cliente = MongoClient("mongodb+srv://afercor2806:LCrXK9Mqkj78BJY8@cluster0.t9bfnum.mongodb.net/")
 db = cliente["tecknomarket"]
 productos_coleccion = db["productos"]
-
+clientes_coleccion = db["clientes"]
 
 
 
@@ -21,12 +23,7 @@ nombre_admin = "Alejandro Fernandez"
 tienda = "TecnoMarket"
 fecha = date.today()
 
-clientes = [
-        {"nombre": "Ana Torres", "email": "ana@mail.com", "activo": True, "pedidos": 4},
-        {"nombre": "Luis Pérez", "email": "luis@mail.com", "activo": False, "pedidos": 1},
-        {"nombre": "Marta García", "email": "marta@mail.com", "activo": True, "pedidos": 7},
-        {"nombre": "Carlos Ruiz", "email": "carlos@mail.com", "activo": False, "pedidos": 0}
-    ]
+
 
 pedidos = [
         {"cliente": "Ana Torres", "total": 1500.0, "fecha": "2025-05-01"},
@@ -42,8 +39,9 @@ def pagina_inicio():
     total_stock = sum([p["stock"] for p in productos])
 
     
-    clientes_activos = sum(1 for c in clientes if c["activo"])
-    cliente_top = max(clientes, key=lambda c: c["pedidos"])
+    clientes = [Cliente.from_dict(c) for c in clientes_coleccion.find()]
+    clientes_activos = sum(1 for c in clientes if c.activo)
+    cliente_top = max(clientes, key=lambda c: c.pedidos) if clientes else None
 
     
     ingreso_total = sum(p["total"] for p in pedidos)
@@ -72,25 +70,19 @@ def pagina_clientes():
 
 
     # Conteo de clientes activos
-    clientes_activos = 0
-    for cliente in clientes:
-        if cliente["activo"]:
-            clientes_activos += 1
+    clientes = [Cliente.from_dict(c) for c in clientes_coleccion.find()]
+    clientes_activos = sum(1 for c in clientes if c.activo)
+    cliente_top = max(clientes, key=lambda c: c.pedidos) if clientes else None
 
-    # Cliente con más pedidos
-    cliente_top = clientes[0]
-    for cliente in clientes:
-        if cliente["pedidos"] > cliente_top["pedidos"]:
-            cliente_top = cliente
-
-    return render_template("lista_usuarios.html", 
-                           pagina = pagina,
-                           nombre_admin=nombre_admin,
-                           tienda=tienda,
-                           fecha=fecha,
-                           clientes=clientes,
-                           clientes_activos=clientes_activos,
-                           cliente_top=cliente_top,)
+    return render_template("lista_usuarios.html",
+        pagina=pagina,
+        nombre_admin=nombre_admin,
+        tienda=tienda,
+        fecha=fecha,
+        clientes=clientes,
+        clientes_activos=clientes_activos,
+        cliente_top=cliente_top
+    )
 
 
 
@@ -106,27 +98,22 @@ def nuevo_cliente():
         pedidos = int(request.form.get("pedidos", 0))
     except ValueError:
         flash("El número de pedidos debe ser un número válido.")
-        return redirect("/registrar_usuario")
+        return redirect("/registro_usuario")
 
     if not nombre or not email:
         flash("El nombre y el correo electrónico no pueden estar vacíos.")
         return redirect("/registro_usuario")
 
-    nuevo = {
-        "nombre": nombre,
-        "email": email,
-        "activo": activo,
-        "pedidos": pedidos
-    }
-
-    clientes.append(nuevo)
+    nuevo = Cliente(nombre=nombre, email=email, activo=activo, pedidos=pedidos)
+    clientes_coleccion.insert_one(nuevo.to_dict())
     flash("Cliente registrado correctamente.")
     return redirect("/clientes")
+
 
 #Registrar Cliente GET
 @app.route("/clientes_nuevo", methods=["GET"])
 def formulario_nuevo_cliente():
-    return render_template("registro_usuario.html", 
+    return render_template("registro_usuario.html",
         pagina="clientes",
         nombre_admin=nombre_admin,
         tienda=tienda,
