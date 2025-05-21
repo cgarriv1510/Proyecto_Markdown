@@ -271,7 +271,7 @@ def tienda_inicio():
     if categoria_seleccionada:
         productos = [producto for producto in productos if
                      producto['categoria'].lower() == categoria_seleccionada.lower()]
-
+    # Añadiendo el SELECT
     categorias = list(productos_coleccion.distinct("categoria"))
 
     return render_template("public/inicio.html",
