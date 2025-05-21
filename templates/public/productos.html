@@ -1,0 +1,25 @@
+{% extends 'base_cliente.html' %}
+
+{% block title %}Catálogo de Productos{% endblock %}
+
+{% block content %}
+    <h2>Catálogo de Productos</h2>
+
+    <div class="productos-container">
+        {% for producto in productos %}
+        <div class="producto">
+            <!-- Ruta correcta para la imagen, asumiendo que 'producto['imagen']' tiene algo como 'images/producto1.jpg' -->
+            <img src="{{ url_for('static', filename=producto['imagen']) }}" alt="{{ producto['nombre'] }}" class="producto-imagen">
+
+            <h3>{{ producto['nombre'] }}</h3>
+            <p>Categoría: {{ producto['categoria'] }}</p>
+            <p>Precio: ${{ producto['precio'] }}</p>
+            <p>Stock disponible: {{ producto['stock'] }}</p>
+
+            <a href="{{ url_for('detalle_producto', producto_id=producto['_id']) }}">
+                <button class="boton-accion">Ver Detalles</button>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

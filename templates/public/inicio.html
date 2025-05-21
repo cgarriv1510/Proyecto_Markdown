@@ -1,0 +1,12 @@
+{% extends "base_cliente.html" %}
+
+{% block content %}
+<section>
+    <h1>Bienvenido a {{ tienda }}</h1>
+    <p>Explora nuestra tienda y descubre las mejores ofertas en tecnología, moda, hogar y más.</p>
+
+    <div style="margin-top: 30px;">
+        <a href="{{ url_for('tienda_productos') }}" class="btn">Ver Productos</a>
+    </div>
+</section>
+{% endblock %}

@@ -20,6 +20,7 @@ clientes_coleccion = db["clientes"]
 
 # Datos generales
 nombre_admin = "Alejandro Fernandez"
+nombre_admin2 = "Oscar Manuel Benito Martin"
 tienda = "TecnoMarket"
 fecha = date.today()
 
@@ -48,6 +49,7 @@ def pagina_inicio():
 
     return render_template("dashboard.html", 
         nombre_admin=nombre_admin,
+        nombre_admin2=nombre_admin2,
         tienda=tienda,
         fecha=fecha,
         pagina="inicio",
@@ -246,6 +248,34 @@ def formulario_nuevo_producto():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
+
+@app.route("/tienda", methods=["GET", "POST"])
+def tienda_inicio():
+    productos = list(productos_coleccion.find())
+
+    categoria_seleccionada = request.args.get('categoria', None)
+    if categoria_seleccionada:
+        productos = [producto for producto in productos if
+                     producto['categoria'].lower() == categoria_seleccionada.lower()]
+    # Añadiendo el SELECT
+    categorias = list(productos_coleccion.distinct("categoria"))
+
+    return render_template("public/inicio.html",
+                           productos=productos,
+                           categorias=categorias,
+                           tienda=tienda,
+                           fecha=fecha)
+
+
+@app.route("/tienda/productos")
+def tienda_productos():
+    productos = list(productos_coleccion.find())
+    return render_template("public/productos.html",
+                           productos=productos,
+                           tienda=tienda,
+                           fecha=fecha)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

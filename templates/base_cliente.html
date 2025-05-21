@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ tienda }} - Cliente</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='client.css') }}">
+
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('tienda_inicio') }}">Inicio</a></li>
+            <li><a href="{{ url_for('tienda_productos') }}">Productos</a></li>
+            <li><a href="#">Carrito</a></li>
+            <li><a href="#">Login</a></li>
+        </ul>
+    </nav>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <p>&copy; {{ tienda }} {{ fecha.year }}</p>
+    </footer>
+</body>
+</html>
