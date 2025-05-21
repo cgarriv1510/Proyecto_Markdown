@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ tienda }} - Cliente</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='client.css') }}">
+
 </head>
 <body>
     <nav>
         <ul>
             <li><a href="{{ url_for('tienda_inicio') }}">Inicio</a></li>
-            <li><a href="{{ url_for('falta por rellenar') }}">Productos</a></li>
+            <li><a href="{{ url_for('tienda_productos') }}">Productos</a></li>
             <li><a href="#">Carrito</a></li>
             <li><a href="#">Login</a></li>
         </ul>

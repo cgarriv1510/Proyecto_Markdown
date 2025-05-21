@@ -262,9 +262,10 @@ def formulario_nuevo_producto():
 def page_not_found(e):
     return render_template('404.html'), 404
 
-app.route("/tienda")
+@app.route("/tienda")
 def tienda_inicio():
-    return render_template("public/inicio.html",tienda=tienda,fecha=fecha)
+    return render_template("public/inicio.html", tienda=tienda, fecha=fecha)
+
 
 @app.route("/tienda/productos")
 def tienda_productos():
