@@ -2,140 +2,140 @@
   {
     "nombre": "iPhone 14 Pro",
     "precio": 999,
-    "imagen": "images/iphone_14.jpg",
+    "imagen": "static/images/iphone_14.jpg",
     "stock": 25,
     "categoria": "Tecnología"
   },
   {
     "nombre": "MacBook Air M2",
     "precio": 1199,
-    "imagen": "images/IMG_5312.jpg",
+    "imagen": "static/images/mackbook.jpg",
     "stock": 15,
     "categoria": "Tecnología"
   },
   {
     "nombre": "Sofá de Esquina Lujoso",
     "precio": 750,
-    "imagen": "images/Canape-haut-de-gamme-brown-sugar-16.jpg",
+    "imagen": "static/images/Canape-haut-de-gamme-brown-sugar-16.jpg",
     "stock": 10,
     "categoria": "Hogar"
   },
   {
     "nombre": "Mesa de Comedor Nórdica",
     "precio": 450,
-    "imagen": "images/09072020-162830mesadecomedorextensiblenordicaNORDIC.jpg",
+    "imagen": "static/images/mesa_comedor.jpg",
     "stock": 20,
     "categoria": "Hogar"
   },
   {
     "nombre": "Zapatillas Nike Air Max",
     "precio": 120,
-    "imagen": "images/00117731203828____1__1200x1200.jpg",
+    "imagen": "static/images/zapatillas_nike.jpg",
     "stock": 35,
     "categoria": "Moda"
   },
   {
     "nombre": "Chaqueta Columbia Impermeable",
     "precio": 180,
-    "imagen": "images/columbia-wyldwood-8.jpg",
+    "imagen": "static/images/columbia-wyldwood-8.jpg",
     "stock": 18,
     "categoria": "Moda"
   },
   {
     "nombre": "LEGO Star Wars - Millennium Falcon",
     "precio": 160,
-    "imagen": "images/lego_halcon.jpg",
+    "imagen": "static/images/lego_halcon.jpg",
     "stock": 12,
     "categoria": "Juguetes"
   },
   {
     "nombre": "Muñeca Barbie Dreamhouse",
     "precio": 200,
-    "imagen": "images/818qXTOY4sL.jpg",
+    "imagen": "static/images/muñeca_barbie.jpg",
     "stock": 14,
     "categoria": "Juguetes"
   },
   {
     "nombre": "Cafetera Nespresso Vertuo",
     "precio": 99,
-    "imagen": "images/51T+L9MQimL._AC_UF894,1000_QL80_.jpg",
+    "imagen": "static/images/cafetera_nespresso.jpg",
     "stock": 30,
     "categoria": "Electrodomésticos"
   },
   {
     "nombre": "Robot Aspirador Roomba i3",
     "precio": 299,
-    "imagen": "images/1541-1.jpg",
+    "imagen": "static/images/robot_aspirador.jpg",
     "stock": 9,
     "categoria": "Electrodomésticos"
   },
   {
     "nombre": "Guitarra Acústica Fender FA-125",
     "precio": 199,
-    "imagen": "images/fender_fa-125-natural_1.jpg",
+    "imagen": "static/images/guitarra_acustica.jpg",
     "stock": 6,
     "categoria": "Instrumentos"
   },
   {
     "nombre": "Teclado Yamaha PSR-E373",
     "precio": 270,
-    "imagen": "images/preview.jpg",
+    "imagen": "static/images/teclado.jpg",
     "stock": 8,
     "categoria": "Instrumentos"
   },
   {
     "nombre": "Croquetas de Pollo (1kg)",
     "precio": 8.99,
-    "imagen": "images/croquetas_pollo.jpg",
+    "imagen": "static/images/croquetas_pollo.jpg",
     "stock": 50,
     "categoria": "Alimentos"
   },
   {
     "nombre": "Salmón Ahumado Noruego (200g)",
     "precio": 5.5,
-    "imagen": "images/salmon_ahumado.jpg",
+    "imagen": "static/images/salmon_ahumado.jpg",
     "stock": 40,
     "categoria": "Alimentos"
   },
   {
     "nombre": "Bicicleta de Montaña Rockrider",
     "precio": 399,
-    "imagen": "images/bicicleta_montaña.jpeg",
+    "imagen": "static/images/bicicleta_montaña.jpeg",
     "stock": 7,
     "categoria": "Deportes"
   },
   {
     "nombre": "Raqueta de Tenis Wilson",
     "precio": 89,
-    "imagen": "images/raqueta_tenis.jpg",
+    "imagen": "static/images/raqueta_tenis.jpg",
     "stock": 13,
     "categoria": "Deportes"
   },
   {
     "nombre": "Set de Brochas de Maquillaje Real Techniques",
     "precio": 25,
-    "imagen": "images/set_brochas.jpg",
+    "imagen": "static/images/set_brochas.jpg",
     "stock": 27,
     "categoria": "Belleza"
   },
   {
     "nombre": "Paleta de Sombras Naked Urban Decay",
     "precio": 55,
-    "imagen": "images/paleta_sombras.jpg",
+    "imagen": "static/images/paleta_sombras.jpg",
     "stock": 16,
     "categoria": "Belleza"
   },
   {
     "nombre": "Libro 'Sapiens' de Yuval Noah Harari",
     "precio": 19.99,
-    "imagen": "images/libro_sapiens.jpg",
+    "imagen": "static/images/libro_sapiens.jpg",
     "stock": 22,
     "categoria": "Libros"
   },
   {
     "nombre": "Libro 'El poder del ahora' de Eckhart Tolle",
     "precio": 14.99,
-    "imagen": "images/libro_ahora.png",
+    "imagen": "static/images/libro_ahora.png",
     "stock": 24,
     "categoria": "Libros"
   }
