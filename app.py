@@ -262,9 +262,23 @@ def formulario_nuevo_producto():
 def page_not_found(e):
     return render_template('404.html'), 404
 
-@app.route("/tienda")
+
+@app.route("/tienda", methods=["GET", "POST"])
 def tienda_inicio():
-    return render_template("public/inicio.html", tienda=tienda, fecha=fecha)
+    productos = list(productos_coleccion.find())
+
+    categoria_seleccionada = request.args.get('categoria', None)
+    if categoria_seleccionada:
+        productos = [producto for producto in productos if
+                     producto['categoria'].lower() == categoria_seleccionada.lower()]
+
+    categorias = list(productos_coleccion.distinct("categoria"))
+
+    return render_template("public/inicio.html",
+                           productos=productos,
+                           categorias=categorias,
+                           tienda=tienda,
+                           fecha=fecha)
 
 
 @app.route("/tienda/productos")
