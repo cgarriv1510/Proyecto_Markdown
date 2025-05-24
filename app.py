@@ -305,6 +305,39 @@ def login():
             return redirect("/login")
 
     return render_template("login.html")
+from werkzeug.security import generate_password_hash
+
+@app.route('/registro', methods=["GET", "POST"])
+def registro():
+    if request.method == "POST":
+        nombre = request.form.get("nombre", "").strip()
+        email = request.form.get("email", "").strip()
+        password = request.form.get("password", "").strip()
+
+        if not nombre or not email or not password:
+            flash("Todos los campos son obligatorios.")
+            return redirect("/registro")
+
+        if clientes_coleccion.find_one({"email": email}):
+            flash("Este correo ya está registrado.")
+            return redirect("/registro")
+
+        hashed_password = generate_password_hash(password)
+
+        nuevo_cliente = {
+            "nombre": nombre,
+            "email": email,
+            "password": hashed_password,
+            "activo": True,
+            "pedidos": 0
+        }
+
+        clientes_coleccion.insert_one(nuevo_cliente)
+        flash("Registro exitoso. Ahora puedes iniciar sesión.")
+        return redirect("/login")
+
+    return render_template("registro_cliente.html")
+
 
 @app.route('/logout')
 def logout():
