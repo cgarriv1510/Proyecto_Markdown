@@ -288,6 +288,29 @@ def tienda_productos():
                            productos=productos,
                            tienda=tienda,
                            fecha=fecha)
+@app.route('/login', methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        email = request.form.get("email", "").strip()
+        
+        # Buscar cliente por email
+        cliente = clientes_coleccion.find_one({"email": email})
+        if cliente:
+            session["cliente_id"] = str(cliente["_id"])
+            session["cliente_nombre"] = cliente["nombre"]
+            flash(f"Bienvenido, {cliente['nombre']}!")
+            return redirect(url_for("pagina_inicio"))
+        else:
+            flash("Correo no registrado.")
+            return redirect("/login")
+
+    return render_template("login.html")
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash("Sesión cerrada correctamente.")
+    return redirect("/login")
 
 
 if __name__ == '__main__':
