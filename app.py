@@ -69,10 +69,13 @@ def pagina_inicio():
 def pagina_clientes():
     pagina = "clientes"
 
+    clientes_raw = list(clientes_coleccion.find())
+    clientes = []
+    for c in clientes_raw:
+        cliente_obj = Cliente.from_dict(c)
+        cliente_obj._id = str(c["_id"])  # Añadimos el _id como string
+        clientes.append(cliente_obj)
 
-
-    # Conteo de clientes activos
-    clientes = [Cliente.from_dict(c) for c in clientes_coleccion.find()]
     clientes_activos = sum(1 for c in clientes if c.activo)
     cliente_top = max(clientes, key=lambda c: c.pedidos) if clientes else None
 
@@ -85,6 +88,7 @@ def pagina_clientes():
         clientes_activos=clientes_activos,
         cliente_top=cliente_top
     )
+
 
 
 
@@ -122,8 +126,26 @@ def formulario_nuevo_cliente():
         fecha=fecha
     )
 
+#Eliminar cliente POST
+@app.route("/eliminar_cliente", methods=["POST"])
+def eliminar_cliente():
+    cliente_id = request.form.get("cliente_id")
+    if not cliente_id:
+        flash("ID de cliente no proporcionado.")
+        return redirect("/clientes")
 
+    try:
+        result = clientes_coleccion.delete_one({"_id": ObjectId(cliente_id)})
+        if result.deleted_count == 1:
+            flash("Cliente eliminado correctamente.")
+        else:
+            flash("No se encontró el cliente.")
+    except Exception as e:
+        flash(f"Error al eliminar cliente: {str(e)}")
 
+    return redirect("/clientes")
+
+#Eliminar cliente GET
 #Pedidos
 @app.route('/pedidos')
 def pagina_pedidos():
