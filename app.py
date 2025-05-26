@@ -18,12 +18,12 @@ clientes_coleccion = db["clientes"]
 
 
 
+
 # Datos generales
 nombre_admin = "Alejandro Fernandez"
 nombre_admin2 = "Oscar Manuel Benito Martin"
 tienda = "TecnoMarket"
 fecha = date.today()
-
 
 
 pedidos = [

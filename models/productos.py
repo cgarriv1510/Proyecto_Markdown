@@ -1,7 +1,7 @@
 from bson import ObjectId
 
 class Producto:
-    def __init__(self, nombre, precio, categoria, stock, _id=None):
+    def __init__(self, nombre, precio, categoria, stock, imagen, _id=None):
         if precio < 0:
             raise ValueError("El precio no puede ser negativo.")
         if stock < 0:
@@ -16,6 +16,7 @@ class Producto:
         self.precio = precio
         self.categoria = categoria
         self.stock = stock
+        self.imagen = imagen
 
     def actualizar_stock(self, cantidad):
         nuevo_stock = self.stock + cantidad
@@ -29,7 +30,8 @@ class Producto:
             "nombre": self.nombre,
             "precio": self.precio,
             "categoria": self.categoria,
-            "stock": self.stock
+            "stock": self.stock,
+            "imagen": self.imagen
         }
 
     @staticmethod
@@ -39,6 +41,7 @@ class Producto:
             precio=diccionario["precio"],
             categoria=diccionario["categoria"],
             stock=diccionario["stock"],
+            imagen=diccionario["imagen"],
             _id=diccionario["_id"]
         )
     
