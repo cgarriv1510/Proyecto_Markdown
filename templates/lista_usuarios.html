@@ -7,10 +7,18 @@
     <div class="clientes-container">
         <ul>
             {% for cliente in clientes %}
-            <li>
-                {{ cliente.nombre }} ({{ cliente.email }}) - 
-                {% if cliente.activo %}Activo{% else %}Inactivo{% endif %} - 
-                Pedidos: {{ cliente.pedidos }}
+            <li class="cliente-item">
+                <span>
+                    {{ cliente.nombre }} ({{ cliente.email }}) - 
+                    {% if cliente.activo %}Activo{% else %}Inactivo{% endif %} - 
+                    Pedidos: {{ cliente.pedidos }}
+                </span>
+                
+                <!-- Botón Eliminar -->
+                <form action="/eliminar_cliente" method="POST">
+                    <input type="hidden" name="cliente_id" value="{{ cliente._id }}">
+                    <button type="submit" class="boton-accion eliminar" onclick="return confirm('¿Estás seguro de que deseas eliminar este cliente?')">Eliminar</button>
+                </form>
             </li>
             {% endfor %}
         </ul>
@@ -25,10 +33,11 @@
             <strong>Cliente con más pedidos:</strong> {{ cliente_top.nombre }} ({{ cliente_top.pedidos }} pedidos)
         </p>
     </div>
+
     <div>
         <a href="/clientes_nuevo">
             <button class="boton-accion">
-                Añadir Productos
+                Añadir Cliente
             </button>
         </a>
     </div>

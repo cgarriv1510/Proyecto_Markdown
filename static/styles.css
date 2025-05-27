@@ -13,7 +13,7 @@ body {
 }
 
 .general {
-    max-width: 960px;
+    max-width: 80%;
     margin: 0 auto;
     padding: 20px;
     background-color: #ffffff;
@@ -137,7 +137,7 @@ button {
     font-size: 1rem;
 }
 .clientes-container {
-    max-width: 600px;
+    max-width: 80%;
     margin: 0 auto;
     background-color: white;
     padding: 20px;
@@ -168,4 +168,39 @@ button {
 .boton-accion:hover {
     background-color: #ca6702;
     transform: translateY(-2px);
+}
+.clientes-container ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+    width: 90%;
+}
+.cliente-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+    gap: 10px;
+    width: 100%;
+}
+
+.cliente-item span {
+    flex: 0 0 80%; /* 80% del ancho */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.form-eliminar {
+    flex: 0 0 20%; /* 20% del ancho */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+}
+
+.boton-accion.eliminar {
+    width: 100%;
+    text-align: center;
 }

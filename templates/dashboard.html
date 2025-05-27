@@ -8,6 +8,7 @@
     <div>
         <table border="1">
             <tr>
+                <th>Imagen</th>
                 <th>Nombre</th>
                 <th>Precio</th>
                 <th>Categoría</th>
@@ -15,6 +16,13 @@
             </tr>
             {% for producto in productos %}
             <tr>
+                <td>
+                    {% if producto.imagen %}
+                        <img src="{{ producto.imagen }}" alt="Imagen de {{ producto.nombre }}" style="max-width:100px; max-height:100px;">
+                    {% else %}
+                        Sin imagen
+                    {% endif %}
+                </td>
                 <td>{{ producto.nombre }}</td>
                 <td>${{ producto.precio }}</td>
                 <td>{{ producto.categoria }}</td>
@@ -30,10 +38,6 @@
         </table>
     </div>
     <p><strong>Total en stock:</strong> {{ total_stock }}</p>
-
-
-
-
 
     <!-- ############Clientes############ -->
 
@@ -59,7 +63,6 @@
             <strong>Cliente con más pedidos:</strong> {{ cliente_top.nombre }} ({{ cliente_top.pedidos }} pedidos)
         </p>
     </div>
-
 
     <!-- ############Pedidos############ -->
 
