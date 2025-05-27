@@ -1,14 +1,13 @@
 from flask import Flask, render_template, request, redirect, flash, session, url_for
 from datetime import date
 from pymongo import MongoClient
-from models.productos import Producto
-from models.clientes import Cliente
 from bson.objectid import ObjectId
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = "Password"
 
-# Conexión a la base de datos MongoDB
+# Conexión a MongoDB
 cliente = MongoClient("mongodb+srv://afercor2806:LCrXK9Mqkj78BJY8@cluster0.t9bfnum.mongodb.net/")
 db = cliente["tecknomarket"]
 productos_coleccion = db["productos"]
@@ -21,8 +20,81 @@ nombre_admin2 = "Oscar Manuel Benito Martin"
 tienda = "TecnoMarket"
 fecha = date.today()
 
+# --- CLASES MODELO --- #
+
+class Cliente:
+    def __init__(self, nombre, email, password=None, activo=True, pedidos=0, _id=None):
+        self.nombre = nombre
+        self.email = email
+        self.password = password  # hashed password
+        self.activo = activo
+        self.pedidos = pedidos
+        self._id = _id
+
+    def to_dict(self):
+        d = {
+            "nombre": self.nombre,
+            "email": self.email,
+            "activo": self.activo,
+            "pedidos": self.pedidos,
+        }
+        if self.password:
+            d["password"] = self.password
+        if self._id:
+            d["_id"] = ObjectId(self._id) if not isinstance(self._id, ObjectId) else self._id
+        return d
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            nombre=data.get("nombre"),
+            email=data.get("email"),
+            password=data.get("password"),
+            activo=data.get("activo", True),
+            pedidos=data.get("pedidos", 0),
+            _id=str(data.get("_id")) if data.get("_id") else None,
+        )
+
+class Producto:
+    def __init__(self, nombre, precio, categoria, stock, _id=None):
+        self.nombre = nombre
+        self.precio = precio
+        self.categoria = categoria
+        self.stock = stock
+        self._id = _id
+
+    def to_dict(self):
+        d = {
+            "nombre": self.nombre,
+            "precio": self.precio,
+            "categoria": self.categoria,
+            "stock": self.stock,
+        }
+        if self._id:
+            d["_id"] = ObjectId(self._id) if not isinstance(self._id, ObjectId) else self._id
+        return d
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            nombre=data.get("nombre"),
+            precio=data.get("precio"),
+            categoria=data.get("categoria"),
+            stock=data.get("stock"),
+            _id=str(data.get("_id")) if data.get("_id") else None,
+        )
+
+# --------------------- #
+
 @app.route("/")
+def index():
+    return redirect("/login")
+
+@app.route("/dashboard")
 def pagina_inicio():
+    if "cliente_id" not in session:
+        return redirect("/login")
+
     productos = list(productos_coleccion.find())
     total_stock = sum([p["stock"] for p in productos])
 
@@ -86,6 +158,8 @@ def nuevo_cliente():
     if not nombre or not email:
         flash("El nombre y el correo electrónico no pueden estar vacíos.")
         return redirect("/clientes_nuevo")
+
+    # Para este método, no se usa password porque es un registro administrativo
 
     nuevo = Cliente(nombre=nombre, email=email, activo=activo, pedidos=pedidos)
     clientes_coleccion.insert_one(nuevo.to_dict())
@@ -201,52 +275,47 @@ def detalle_producto(producto_id):
         tienda=tienda,
         fecha=fecha)
 
-@app.route("/productos_nuevo", methods=["POST"])
+@app.route("/productos_nuevo", methods=["POST", "GET"])
 def nuevo_producto():
-    nombre = request.form.get("nombre", "").strip()
-    categoria = request.form.get("categoria", "").strip()
+    if request.method == "POST":
+        nombre = request.form.get("nombre", "").strip()
+        categoria = request.form.get("categoria", "").strip()
 
-    try:
-        precio = float(request.form.get("precio", 0))
-        stock = int(request.form.get("stock", 0))
-    except ValueError:
-        flash("Precio y stock deben ser valores numéricos.")
-        return redirect("/productos_nuevo")
-
-    if not nombre or not categoria:
-        flash("El nombre y la categoría no pueden estar vacíos.")
-        return redirect("/productos_nuevo")
-    if precio < 0:
-        flash("El precio no puede ser negativo.")
-        return redirect("/productos_nuevo")
-    if stock < 0:
-        flash("El stock no puede ser negativo.")
-        return redirect("/productos_nuevo")
-
-    producto_existente = productos_coleccion.find_one({
-        "nombre": {"$regex": f"^{nombre}$", "$options": "i"},
-        "categoria": categoria
-    })
-
-    if producto_existente:
-        productos_coleccion.update_one(
-            {"_id": producto_existente["_id"]},
-            {"$set": {"precio": precio, "stock": stock}}
-        )
-        flash("Producto existente actualizado con nuevo stock y precio.")
-    else:
         try:
+            precio = float(request.form.get("precio", 0))
+            stock = int(request.form.get("stock", 0))
+        except ValueError:
+            flash("Precio y stock deben ser valores numéricos.")
+            return redirect("/productos_nuevo")
+
+        if not nombre or not categoria:
+            flash("El nombre y la categoría no pueden estar vacíos.")
+            return redirect("/productos_nuevo")
+        if precio < 0:
+            flash("El precio no puede ser negativo.")
+            return redirect("/productos_nuevo")
+        if stock < 0:
+            flash("El stock no puede ser negativo.")
+            return redirect("/productos_nuevo")
+
+        producto_existente = productos_coleccion.find_one({
+            "nombre": {"$regex": f"^{nombre}$", "$options": "i"},
+            "categoria": categoria
+        })
+
+        if producto_existente:
+            productos_coleccion.update_one(
+                {"_id": producto_existente["_id"]},
+                {"$set": {"precio": precio, "stock": stock}}
+            )
+            flash("Producto existente actualizado.")
+        else:
             producto = Producto(nombre=nombre, precio=precio, categoria=categoria, stock=stock)
             productos_coleccion.insert_one(producto.to_dict())
             flash("Producto añadido correctamente.")
-        except ValueError as e:
-            flash(f"Error al crear el producto: {str(e)}")
-            return redirect("/productos_nuevo")
 
-    return redirect("/productos")
+        return redirect("/productos")
 
-@app.route("/productos_nuevo", methods=["GET"])
-def formulario_nuevo_producto():
     return render_template("añadir_producto.html",
         pagina="productos_nuevo",
         nombre_admin=nombre_admin,
@@ -254,8 +323,11 @@ def formulario_nuevo_producto():
         fecha=fecha)
 
 # Tienda pública
-@app.route("/tienda", methods=["GET", "POST"])
+@app.route("/tienda")
 def tienda_inicio():
+    if "cliente_id" not in session:
+        return redirect("/login")
+
     productos = list(productos_coleccion.find())
     categoria_seleccionada = request.args.get('categoria', None)
     if categoria_seleccionada:
@@ -272,28 +344,33 @@ def tienda_inicio():
 def tienda_productos():
     productos = list(productos_coleccion.find())
     return render_template("public/productos.html",
-                           productos=productos,
-                           tienda=tienda,
-                           fecha=fecha)
+        productos=productos,
+        tienda=tienda,
+        fecha=fecha)
+
+# LOGIN
 @app.route('/login', methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         email = request.form.get("email", "").strip()
-        
-        # Buscar cliente por email
+        password = request.form.get("password", "").strip()
+
         cliente = clientes_coleccion.find_one({"email": email})
-        if cliente:
-            session["cliente_id"] = str(cliente["_id"])
-            session["cliente_nombre"] = cliente["nombre"]
-            flash(f"Bienvenido, {cliente['nombre']}!")
-            return redirect(url_for("pagina_inicio"))
+        if cliente and "password" in cliente:
+            if check_password_hash(cliente["password"], password):
+                session["cliente_id"] = str(cliente["_id"])
+                session["cliente_nombre"] = cliente["nombre"]
+                flash(f"Bienvenido, {cliente['nombre']}!")
+                return redirect("/tienda")
+            else:
+                flash("Contraseña incorrecta.")
+                return redirect("/login")
         else:
             flash("Correo no registrado.")
             return redirect("/login")
-
     return render_template("login.html")
-from werkzeug.security import generate_password_hash
 
+# REGISTRO
 @app.route('/registro', methods=["GET", "POST"])
 def registro():
     if request.method == "POST":
@@ -307,6 +384,9 @@ def registro():
 
         if clientes_coleccion.find_one({"email": email}):
             flash("Este correo ya está registrado.")
+            return redirect("/registro")
+        if len(password) < 8:
+            flash("La contraseña debe tener al menos 8 caracteres.")
             return redirect("/registro")
 
         hashed_password = generate_password_hash(password)
@@ -325,18 +405,18 @@ def registro():
 
     return render_template("registro_cliente.html")
 
-
+# LOGOUT
 @app.route('/logout')
 def logout():
     session.clear()
     flash("Sesión cerrada correctamente.")
     return redirect("/login")
 
-
-# Página de error 404
+# ERROR 404
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
 
 if __name__ == '__main__':
     app.run(debug=True)
