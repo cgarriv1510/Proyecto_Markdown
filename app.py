@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, flash
+from flask import Flask, render_template, request, redirect, flash, session, url_for
 from datetime import date
 from pymongo import MongoClient
 from models.productos import Producto
@@ -331,9 +331,7 @@ def logout():
     session.clear()
     flash("Sesión cerrada correctamente.")
     return redirect("/login")
-        productos=productos,
-        tienda=tienda,
-        fecha=fecha)
+
 
 # Página de error 404
 @app.errorhandler(404)

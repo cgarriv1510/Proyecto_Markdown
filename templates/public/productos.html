@@ -9,8 +9,7 @@
         {% for producto in productos %}
         <div class="producto">
             <!-- Ruta correcta para la imagen, asumiendo que 'producto['imagen']' tiene algo como 'images/producto1.jpg' -->
-            <img src="{{ url_for('static', filename=producto['imagen']) }}" alt="{{ producto['nombre'] }}" class="producto-imagen">
-
+            <img src="/{{ producto.imagen }}" alt="Imagen de {{ producto.nombre }}" style="max-width:300px; max-height:300px;">
             <h3>{{ producto['nombre'] }}</h3>
             <p>Categoría: {{ producto['categoria'] }}</p>
             <p>Precio: ${{ producto['precio'] }}</p>
