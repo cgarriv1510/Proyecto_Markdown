@@ -3,11 +3,28 @@ from datetime import date
 
 class Pedido:
     def __init__(self, cliente_id, productos, fecha=None, _id=None):
+    
         self._id = _id or ObjectId()
         self.cliente_id = ObjectId(cliente_id)
-        self.productos = productos  # Lista de dicts con producto_id, cantidad, etc.
         self.fecha = fecha or date.today().isoformat()
-        self.total = sum(p["subtotal"] for p in productos)
+
+        self.productos = []
+        self.total = 0
+
+        for p in productos:
+            producto_id = ObjectId(p["producto_id"])
+            cantidad = int(p["cantidad"])
+            precio = float(p["precio"])
+            subtotal = round(precio * cantidad, 2)
+            self.productos.append({
+                "producto_id": producto_id,
+                "cantidad": cantidad,
+                "precio": precio,
+                "subtotal": subtotal
+            })
+            self.total += subtotal
+
+        self.total = round(self.total, 2)
 
     def to_dict(self):
         return {

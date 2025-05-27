@@ -1,4 +1,4 @@
-#!/home/hydro/Escritorio/Proyecto_Final/.venv/bin/python
+#!/home/alex/Escritorio/Proyecto_Final/.venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
