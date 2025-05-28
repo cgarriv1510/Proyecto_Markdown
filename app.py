@@ -414,7 +414,6 @@ def tienda_detalle_producto(producto_id):
         fecha=fecha)
 
 
-
     
 if __name__ == '__main__':
     app.run(debug=True)
