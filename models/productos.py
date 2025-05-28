@@ -11,7 +11,16 @@ class Producto:
         if not categoria:
             raise ValueError("La categoría no puede estar vacía.")
         
-        self.id = _id or ObjectId()
+        # Convierte el _id a ObjectId si es string, o genera uno nuevo
+        if _id is None:
+            self.id = ObjectId()
+        elif isinstance(_id, ObjectId):
+            self.id = _id
+        elif isinstance(_id, str):
+            self.id = ObjectId(_id)
+        else:
+            raise TypeError("El _id debe ser None, str o ObjectId")
+        
         self.nombre = nombre
         self.precio = precio
         self.categoria = categoria
@@ -36,13 +45,16 @@ class Producto:
 
     @staticmethod
     def from_dict(diccionario):
+        _id = diccionario.get("_id")
+        if _id and isinstance(_id, str):
+            _id = ObjectId(_id)
         return Producto(
             nombre=diccionario["nombre"],
             precio=diccionario["precio"],
             categoria=diccionario["categoria"],
             stock=diccionario["stock"],
             imagen=diccionario["imagen"],
-            _id=diccionario["_id"]
+            _id=_id
         )
     
     def __str__(self):

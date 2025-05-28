@@ -109,3 +109,43 @@ h2 {
 .boton-accion:hover {
     background-color: #ca6702;
 }
+
+.carrito-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.carrito-tabla th, .carrito-tabla td {
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    text-align: center;
+    vertical-align: middle;
+    color: #333;
+}
+
+.carrito-tabla thead {
+    background-color: #005f73;
+    color: white;
+}
+
+.carrito-tabla tbody tr:hover {
+    background-color: #f0f7f7;
+    transition: background-color 0.3s ease;
+}
+
+.producto-imagen {
+    width: 100px;
+    max-height: 100px;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+th h2 {
+    color: white;              /* Asegura el texto en blanco */
+}

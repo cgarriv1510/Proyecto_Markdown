@@ -1,0 +1,59 @@
+{% extends 'base_cliente.html' %}
+
+{% block title %}Carrito de Compras{% endblock %}
+
+{% block content %}
+    <h2>Carrito de Compras</h2>
+
+    {% if productos %}
+    <table class="carrito-tabla" cellpadding="10">
+        <thead>
+            <tr>
+                <th><h2>Imagen</h2></th>
+                <th><h2>Producto</h2></th>
+                <th><h2>Precio unitario</h2></th>
+                <th><h2>Cantidad</h2></th>
+                <th><h2>Subtotal</h2></th>
+                <th></th> 
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+                <tr>
+                    <td>
+                        {% if producto.imagen %}
+                            <img src="{{ producto.imagen }}" alt="Imagen de {{ producto.nombre }}" class="producto-imagen">
+                        {% else %}
+                            <span>Sin imagen</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ producto.nombre }}</td>
+                    <td>${{ "%.2f"|format(producto.precio) }}</td>
+                    <td>{{ producto.cantidad }}</td>
+                    <td>${{ "%.2f"|format(producto.subtotal) }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('eliminar_del_carrito') }}">
+                            <input type="hidden" name="producto_id" value="{{ producto.id }}">
+                            <button type="submit" class="boton-accion" style="background-color: #d90429;">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Total: ${{ "%.2f"|format(total) }}</h3>
+
+    <form method="POST" action="{{ url_for('realizar_pedido') }}">
+        <button type="submit" class="boton-accion" style="background-color: #28a745; color: white;">
+            Realizar pedido
+        </button>
+    </form>
+
+    {% else %}
+        <p>El carrito está vacío.</p>
+        <a href="{{ url_for('tienda_inicio') }}">
+            <button class="boton-accion">Ir a la tienda</button>
+        </a>
+    {% endif %}
+{% endblock %}
