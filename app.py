@@ -417,6 +417,44 @@ def logout():
 def page_not_found(e):
     return render_template('404.html'), 404
 
+@app.route("/carrito/agregar", methods=["POST"])
+def agregar_al_carrito():
+    if "cliente_id" not in session:
+        flash("Debes iniciar sesión para agregar productos al carrito.")
+        return redirect("/login")
 
+    producto_id = request.form.get("producto_id")
+    if not producto_id:
+        flash("No se especificó el producto para agregar.")
+        return redirect(request.referrer or "/")
+
+    # Verificar que el producto existe y tiene stock
+    producto_data = productos_coleccion.find_one({"_id": ObjectId(producto_id)})
+    if not producto_data:
+        flash("Producto no encontrado.")
+        return redirect(request.referrer or "/")
+
+    stock_disponible = producto_data.get("stock", 0)
+    if stock_disponible <= 0:
+        flash("El producto está agotado.")
+        return redirect(request.referrer or "/")
+
+    # Obtener carrito actual de la sesión o crear uno nuevo
+    carrito = session.get("carrito", {})
+
+    cantidad_actual = carrito.get(producto_id, 0)
+
+    # Controlar que no se exceda el stock
+    if cantidad_actual + 1 > stock_disponible:
+        flash(f"No hay suficiente stock para agregar más unidades del producto '{producto_data['nombre']}'.")
+        return redirect(request.referrer or "/")
+
+    # Incrementar la cantidad del producto en el carrito
+    carrito[producto_id] = cantidad_actual + 1
+
+    session["carrito"] = carrito
+    flash(f"Producto '{producto_data['nombre']}' agregado al carrito.")
+    return redirect(request.referrer or "/")
+    
 if __name__ == '__main__':
     app.run(debug=True)
