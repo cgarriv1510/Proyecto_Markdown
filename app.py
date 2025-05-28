@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, redirect, flash, session, url_for
 from datetime import date
 from pymongo import MongoClient
+from models.clientes import Cliente
+from models.productos import Producto
+from models.pedidos import Pedido
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -19,72 +22,6 @@ nombre_admin = "Alejandro Fernandez"
 nombre_admin2 = "Oscar Manuel Benito Martin"
 tienda = "TecnoMarket"
 fecha = date.today()
-
-# --- CLASES MODELO --- #
-
-class Cliente:
-    def __init__(self, nombre, email, password=None, activo=True, pedidos=0, _id=None):
-        self.nombre = nombre
-        self.email = email
-        self.password = password  # hashed password
-        self.activo = activo
-        self.pedidos = pedidos
-        self._id = _id
-
-    def to_dict(self):
-        d = {
-            "nombre": self.nombre,
-            "email": self.email,
-            "activo": self.activo,
-            "pedidos": self.pedidos,
-        }
-        if self.password:
-            d["password"] = self.password
-        if self._id:
-            d["_id"] = ObjectId(self._id) if not isinstance(self._id, ObjectId) else self._id
-        return d
-
-    @classmethod
-    def from_dict(cls, data):
-        return cls(
-            nombre=data.get("nombre"),
-            email=data.get("email"),
-            password=data.get("password"),
-            activo=data.get("activo", True),
-            pedidos=data.get("pedidos", 0),
-            _id=str(data.get("_id")) if data.get("_id") else None,
-        )
-
-class Producto:
-    def __init__(self, nombre, precio, categoria, stock, _id=None):
-        self.nombre = nombre
-        self.precio = precio
-        self.categoria = categoria
-        self.stock = stock
-        self._id = _id
-
-    def to_dict(self):
-        d = {
-            "nombre": self.nombre,
-            "precio": self.precio,
-            "categoria": self.categoria,
-            "stock": self.stock,
-        }
-        if self._id:
-            d["_id"] = ObjectId(self._id) if not isinstance(self._id, ObjectId) else self._id
-        return d
-
-    @classmethod
-    def from_dict(cls, data):
-        return cls(
-            nombre=data.get("nombre"),
-            precio=data.get("precio"),
-            categoria=data.get("categoria"),
-            stock=data.get("stock"),
-            _id=str(data.get("_id")) if data.get("_id") else None,
-        )
-
-# --------------------- #
 
 @app.route("/")
 def index():
@@ -417,6 +354,10 @@ def logout():
 def page_not_found(e):
     return render_template('404.html'), 404
 
+
+
+#CARRITO
+
 @app.route("/carrito/agregar", methods=["POST"])
 def agregar_al_carrito():
     if "cliente_id" not in session:
@@ -455,6 +396,25 @@ def agregar_al_carrito():
     session["carrito"] = carrito
     flash(f"Producto '{producto_data['nombre']}' agregado al carrito.")
     return redirect(request.referrer or "/")
+
+
+@app.route("/tienda/producto/<producto_id>")
+def tienda_detalle_producto(producto_id):
+    producto_data = productos_coleccion.find_one({"_id": ObjectId(producto_id)})
+    if not producto_data:
+        flash("Producto no encontrado.")
+        return redirect("/tienda/productos")
+
+    producto = Producto.from_dict(producto_data)
+    producto.id = str(producto_data["_id"])  # Para usar en formularios
+
+    return render_template("public/detalle_producto.html",
+        producto=producto,
+        tienda=tienda,
+        fecha=fecha)
+
+
+
     
 if __name__ == '__main__':
     app.run(debug=True)
