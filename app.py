@@ -446,5 +446,3 @@ def mostrar_carrito():
                            fecha=fecha)
 if __name__ == '__main__':
     app.run(debug=True)
-
-
