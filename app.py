@@ -455,6 +455,34 @@ def agregar_al_carrito():
     session["carrito"] = carrito
     flash(f"Producto '{producto_data['nombre']}' agregado al carrito.")
     return redirect(request.referrer or "/")
-    
+    @app.route("/carrito")
+def mostrar_carrito():
+    if "cliente_id" not in session:
+        flash("Debes iniciar sesión para ver el carrito.")
+        return redirect("/login")
+
+    carrito = session.get("carrito", {})
+    productos_carrito = []
+    total = 0.0
+
+    for producto_id, cantidad in carrito.items():
+        producto_data = productos_coleccion.find_one({"_id": ObjectId(producto_id)})
+        if producto_data:
+            subtotal = producto_data["precio"] * cantidad
+            total += subtotal
+            productos_carrito.append({
+                "id": str(producto_data["_id"]),
+                "nombre": producto_data["nombre"],
+                "precio": producto_data["precio"],
+                "cantidad": cantidad,
+                "subtotal": subtotal
+            })
+
+    return render_template("carrito.html",
+                           productos=productos_carrito,
+                           total=total,
+                           nombre_admin=nombre_admin,
+                           tienda=tienda,
+                           fecha=fecha)
 if __name__ == '__main__':
     app.run(debug=True)
