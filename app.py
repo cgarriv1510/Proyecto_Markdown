@@ -396,7 +396,6 @@ def agregar_al_carrito():
     session["carrito"] = carrito
     flash(f"Producto '{producto_data['nombre']}' agregado al carrito.")
     return redirect(request.referrer or "/")
-<<<<<<< HEAD
 
 
 @app.route("/tienda/producto/<producto_id>")
@@ -416,8 +415,7 @@ def tienda_detalle_producto(producto_id):
 
 
     
-=======
-    @app.route("/carrito")
+@app.route("/carrito")
 def mostrar_carrito():
     if "cliente_id" not in session:
         flash("Debes iniciar sesión para ver el carrito.")
@@ -446,6 +444,5 @@ def mostrar_carrito():
                            nombre_admin=nombre_admin,
                            tienda=tienda,
                            fecha=fecha)
->>>>>>> 369816e3b4eab48dc800a3a16abbfddaf5f76f40
 if __name__ == '__main__':
     app.run(debug=True)
