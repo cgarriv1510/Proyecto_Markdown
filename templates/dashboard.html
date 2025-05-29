@@ -69,26 +69,37 @@
     <h2>Pedidos Recientes</h2>
 
     {% if pedidos %}
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>Cliente</th>
-                    <th>Total</th>
-                    <th>Fecha</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for pedido in pedidos %}
-                <tr>
-                    <td>{{ pedido.cliente }}</td>
-                    <td>${{ pedido.total }}</td>
-                    <td>{{ pedido.fecha }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Total</th>
+                <th>Fecha</th>
+                <th>Productos</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pedido in pedidos %}
+            <tr>
+                <td>{{ pedido.cliente.nombre }}</td>
+                <td>${{ "%.2f"|format(pedido.total) }}</td>
+                <td>{{ pedido.fecha }}</td>
+                <td>
+                    <select>
+                        {% for producto in pedido.productos %}
+                            {# Usa producto.id o producto._id según cómo venga #}
+                            <option value="{{ producto.id if producto.id is defined else producto._id }}">
+                                {{ producto.nombre }} - Cantidad: {{ producto.cantidad }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-        <p><strong>Ingreso total:</strong> ${{ ingreso_total }}</p>
+    <p><strong>Ingreso total:</strong> ${{ "%.2f"|format(ingreso_total) }}</p>
     {% else %}
         <p>No hay pedidos registrados.</p>
     {% endif %}

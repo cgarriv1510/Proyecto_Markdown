@@ -12,14 +12,13 @@
         {% for producto in productos %}
         <!-- Bucle for que itera sobre la lista de productos -->
         <div class="producto">
-            <!-- Ruta correcta para la imagen, asumiendo que 'producto['imagen']' tiene algo como 'images/producto1.jpg' -->
             <img src="/{{ producto.imagen }}" alt="Imagen de {{ producto.nombre }}" style="max-width:300px; max-height:300px;">
             <h3>{{ producto['nombre'] }}</h3>
             <p>Categoría: {{ producto['categoria'] }}</p>
             <p>Precio: ${{ producto['precio'] }}</p>
             <p>Stock disponible: {{ producto['stock'] }}</p>
 
-            <a href="{{ url_for('detalle_producto', producto_id=producto['_id']) }}">
+            <a href="{{ url_for('tienda_detalle_producto', producto_id=producto['_id']) }}">
                 <button class="boton-accion">Ver Detalles</button>
             </a>
         </div>

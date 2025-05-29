@@ -1,0 +1,41 @@
+{% extends 'base_cliente.html' %}
+
+{% block title %}Detalle del Producto{% endblock %}
+
+{% block content %}
+<h2>Detalle del Producto</h2>
+<div class="producto-detalle">
+    {% if producto.imagen %}
+        <img src="/{{ producto.imagen }}" alt="Imagen de {{ producto.nombre }}" style="max-width:300px; max-height:300px;">
+    {% else %}
+        <p>Sin imagen disponible</p>
+    {% endif %}
+
+    <p><strong>ID:</strong> {{ producto.id }}</p>
+    <p><strong>Nombre:</strong> {{ producto.nombre }}</p>
+    <p><strong>Precio:</strong> ${{ producto.precio }}</p>
+    <p><strong>Categoría:</strong> {{ producto.categoria }}</p>
+    <p><strong>Stock:</strong> 
+        {% if producto.stock > 0 %}
+            {{ producto.stock }}
+        {% else %}
+            <strong>Agotado</strong>
+        {% endif %}
+    </p>
+</div>
+
+{% if producto.stock > 0 %}
+<form action="{{ url_for('agregar_al_carrito') }}" method="POST">
+    <input type="hidden" name="producto_id" value="{{ producto.id }}">
+    <button type="submit" class="boton-accion">Agregar al Carrito</button>
+</form>
+{% else %}
+    <p>No se puede agregar al carrito porque el producto está agotado.</p>
+{% endif %}
+
+<div>
+    <a href="{{ url_for('tienda_productos') }}">
+        <button class="boton-accion">Volver al Catálogo</button>
+    </a>
+</div>
+{% endblock %}

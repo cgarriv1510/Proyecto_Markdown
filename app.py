@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, redirect, flash, session, url_for
 from datetime import date
 from pymongo import MongoClient
+from models.clientes import Cliente
+from models.productos import Producto
+from models.pedidos import Pedido
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -20,76 +23,9 @@ nombre_admin2 = "Oscar Manuel Benito Martin"
 tienda = "TecnoMarket"
 fecha = date.today()
 
-# --- CLASES MODELO --- #
-
-class Cliente:
-    def __init__(self, nombre, email, password=None, activo=True, pedidos=0, _id=None):
-        self.nombre = nombre
-        self.email = email
-        self.password = password  # hashed password
-        self.activo = activo
-        self.pedidos = pedidos
-        self._id = _id
-
-    def to_dict(self):
-        d = {
-            "nombre": self.nombre,
-            "email": self.email,
-            "activo": self.activo,
-            "pedidos": self.pedidos,
-        }
-        if self.password:
-            d["password"] = self.password
-        if self._id:
-            d["_id"] = ObjectId(self._id) if not isinstance(self._id, ObjectId) else self._id
-        return d
-
-    @classmethod
-    def from_dict(cls, data):
-        return cls(
-            nombre=data.get("nombre"),
-            email=data.get("email"),
-            password=data.get("password"),
-            activo=data.get("activo", True),
-            pedidos=data.get("pedidos", 0),
-            _id=str(data.get("_id")) if data.get("_id") else None,
-        )
-
-class Producto:
-    def __init__(self, nombre, precio, categoria, stock, _id=None):
-        self.nombre = nombre
-        self.precio = precio
-        self.categoria = categoria
-        self.stock = stock
-        self._id = _id
-
-    def to_dict(self):
-        d = {
-            "nombre": self.nombre,
-            "precio": self.precio,
-            "categoria": self.categoria,
-            "stock": self.stock,
-        }
-        if self._id:
-            d["_id"] = ObjectId(self._id) if not isinstance(self._id, ObjectId) else self._id
-        return d
-
-    @classmethod
-    def from_dict(cls, data):
-        return cls(
-            nombre=data.get("nombre"),
-            precio=data.get("precio"),
-            categoria=data.get("categoria"),
-            stock=data.get("stock"),
-            _id=str(data.get("_id")) if data.get("_id") else None,
-        )
-
-# --------------------- #
-# RUta inical al login
 @app.route("/")
 def index():
     return redirect("/login")
-# Panel de administración / dashboard
 @app.route("/dashboard")
 def pagina_inicio():
     if "cliente_id" not in session:
@@ -102,8 +38,29 @@ def pagina_inicio():
     clientes_activos = sum(1 for c in clientes if c.activo)
     cliente_top = max(clientes, key=lambda c: c.pedidos) if clientes else None
 
-    pedidos = list(pedidos_coleccion.find())
-    ingreso_total = sum(p["total"] for p in pedidos)
+    pedidos_raw = list(pedidos_coleccion.find())
+    pedidos = []
+    ingreso_total = 0
+
+    # Para hacer búsqueda rápida, crea diccionario clientes por id (string)
+    clientes_dict = {str(c._id): c for c in clientes}
+
+    for p in pedidos_raw:
+        cliente_id = p.get("cliente_id")
+        cliente_obj = clientes_dict.get(str(cliente_id)) if cliente_id else None
+
+        # Productos los dejamos tal cual, o también enriquecemos si quieres
+        productos_pedido = p.get("productos", [])
+
+        pedidos.append({
+            "_id": str(p["_id"]),
+            "cliente": cliente_obj,   # objeto Cliente o None
+            "total": p.get("total", 0),
+            "fecha": p.get("fecha", ""),
+            "productos": productos_pedido
+        })
+
+        ingreso_total += p.get("total", 0)
 
     return render_template("dashboard.html",
         nombre_admin=nombre_admin,
@@ -118,6 +75,7 @@ def pagina_inicio():
         cliente_top=cliente_top,
         pedidos=pedidos,
         ingreso_total=ingreso_total)
+
 
 # Clientes
 @app.route('/clientes')
@@ -168,7 +126,7 @@ def nuevo_cliente():
 # Mostrar formulario para nuevo cliente (GET)
 @app.route("/clientes_nuevo", methods=["GET"])
 def formulario_nuevo_cliente():
-    return render_template("registro_usuario.html",
+    return render_template("registro_cliente.html",
         pagina="clientes",
         nombre_admin=nombre_admin,
         tienda=tienda,
@@ -195,18 +153,56 @@ def eliminar_cliente():
 # Pedidos de lista de pedidos
 @app.route('/pedidos')
 def pagina_pedidos():
-    pagina = "pedidos"
-    pedidos = list(pedidos_coleccion.find())
-    ingreso_total = sum(p["total"] for p in pedidos)
+    pedidos_raw = list(pedidos_coleccion.find())
+    pedidos = []
+    ingreso_total = 0
+
+    for p in pedidos_raw:
+        # Obtener nombre cliente
+        cliente_nombre = "Desconocido"
+        cliente_id = p.get("cliente_id")
+        if cliente_id:
+            cliente_data = clientes_coleccion.find_one({"_id": cliente_id})
+            if cliente_data:
+                cliente_nombre = cliente_data.get("nombre", "Desconocido")
+        else:
+            cliente_nombre = p.get("cliente", "Desconocido")
+
+        # Obtener productos con nombre y cantidad
+        productos_info = []
+        for prod in p.get("productos", []):
+            producto_id = prod.get("producto_id")
+            if producto_id:
+                try:
+                    producto_oid = ObjectId(producto_id)
+                except Exception:
+                    continue
+                producto_data = productos_coleccion.find_one({"_id": producto_oid})
+                if producto_data:
+                    productos_info.append({
+                        "producto_id": str(producto_oid),
+                        "nombre": producto_data.get("nombre", "Producto desconocido"),
+                        "cantidad": prod.get("cantidad", 0)
+                    })
+
+        pedidos.append({
+            "cliente": cliente_nombre,
+            "total": p.get("total", 0),
+            "fecha": p.get("fecha", ""),
+            "productos": productos_info
+        })
+
+        ingreso_total += p.get("total", 0)
 
     return render_template('lista_pedidos.html',
-        pagina=pagina,
-        nombre_admin=nombre_admin,
-        tienda=tienda,
-        fecha=fecha,
-        pedidos=pedidos,
-        ingreso_total=ingreso_total)
-# Crear nuevo pedido
+                           pedidos=pedidos,
+                           ingreso_total=ingreso_total,
+                           nombre_admin=nombre_admin,
+                           tienda=tienda,
+                           fecha=fecha,
+                           pagina="pedidos")
+
+
 @app.route("/pedidos_nuevo", methods=["GET", "POST"])
 def nuevo_pedido():
     if request.method == "POST":
@@ -426,7 +422,11 @@ def logout():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
-# Agregar producto al carrito
+
+
+
+#CARRITO
+
 @app.route("/carrito/agregar", methods=["POST"])
 def agregar_al_carrito():
     if "cliente_id" not in session:
@@ -467,8 +467,26 @@ def agregar_al_carrito():
     # La clave "carrito" dentro del objeto `session` almacenará un diccionario con los IDs de productos y sus cantidades.
     session["carrito"] = carrito
     flash(f"Producto '{producto_data['nombre']}' agregado al carrito.")
-    return redirect(request.referrer or "/")
-# Mostrar contenido del carrito
+    return redirect("/carrito")
+
+
+@app.route("/tienda/producto/<producto_id>")
+def tienda_detalle_producto(producto_id):
+    producto_data = productos_coleccion.find_one({"_id": ObjectId(producto_id)})
+    if not producto_data:
+        flash("Producto no encontrado.")
+        return redirect("/tienda/productos")
+
+    producto = Producto.from_dict(producto_data)
+    producto.id = str(producto_data["_id"])  # Para usar en formularios
+
+    return render_template("public/detalle_producto.html",
+        producto=producto,
+        tienda=tienda,
+        fecha=fecha)
+
+
+    
 @app.route("/carrito")
 def mostrar_carrito():
     # Verificar si el usuario está autenticado
@@ -493,14 +511,98 @@ def mostrar_carrito():
                 "nombre": producto_data["nombre"],
                 "precio": producto_data["precio"],
                 "cantidad": cantidad,
-                "subtotal": subtotal
+                "subtotal": subtotal,
+                "imagen": producto_data.get("imagen", None)  # Si quieres mostrar la imagen en el carrito
             })
-    #Renderiza la plantilla del carrito con los productos, el total, el nombre del administrador, la tienda y la fecha
-    return render_template("carrito.html",
-                           productos=productos_carrito,
-                           total=total,
-                           nombre_admin=nombre_admin,
-                           tienda=tienda,
-                           fecha=fecha)
+
+    return render_template("public/carrito.html",
+                            productos=productos_carrito,
+                            total=total,
+                            nombre_admin=nombre_admin,
+                            tienda=tienda,
+                            fecha=fecha)
+
+
+
+
+@app.route("/carrito/eliminar", methods=["POST"])
+def eliminar_del_carrito():
+    if "cliente_id" not in session:
+        flash("Debes iniciar sesión para modificar el carrito.")
+        return redirect("/login")
+
+    producto_id = request.form.get("producto_id")
+    if not producto_id:
+        flash("No se especificó el producto a eliminar.")
+        return redirect("/carrito")
+
+    carrito = session.get("carrito", {})
+
+    if producto_id in carrito:
+        carrito.pop(producto_id)
+        session["carrito"] = carrito
+        flash("Producto eliminado del carrito.")
+    else:
+        flash("El producto no está en el carrito.")
+
+    return redirect("/carrito")
+
+@app.route("/realizar_pedido", methods=["POST"])
+def realizar_pedido():
+    if "cliente_id" not in session:
+        flash("Debes iniciar sesión para realizar un pedido.")
+        return redirect("/login")
+
+    carrito = session.get("carrito", {})
+    if not carrito:
+        flash("El carrito está vacío.")
+        return redirect("/carrito")
+
+    cliente_id = session["cliente_id"]
+    productos_pedido = []
+    total = 0.0
+
+    for producto_id, cantidad in carrito.items():
+        producto_data = productos_coleccion.find_one({"_id": ObjectId(producto_id)})
+        if not producto_data:
+            continue  # Ignorar productos no encontrados (podrías mejorar esto)
+        subtotal = producto_data["precio"] * cantidad
+        total += subtotal
+        productos_pedido.append({
+            "producto_id": producto_id,
+            "nombre": producto_data["nombre"],
+            "cantidad": cantidad,
+            "precio_unitario": producto_data["precio"],
+            "subtotal": subtotal
+        })
+
+    if not productos_pedido:
+        flash("No se encontraron productos válidos en el carrito.")
+        return redirect("/carrito")
+
+    nuevo_pedido = {
+        "cliente_id": ObjectId(cliente_id),
+        "productos": productos_pedido,
+        "total": total,
+        "fecha": date.today().isoformat()
+    }
+
+    pedidos_coleccion.insert_one(nuevo_pedido)
+
+    # Vaciar carrito
+    session["carrito"] = {}
+
+    # Opcional: incrementar el número de pedidos del cliente
+    clientes_coleccion.update_one(
+        {"_id": ObjectId(cliente_id)},
+        {"$inc": {"pedidos": 1}}
+    )
+
+    flash("Pedido realizado con éxito.")
+    return redirect("/tienda")
+
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
