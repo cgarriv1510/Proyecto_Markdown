@@ -360,7 +360,6 @@ def login():
             if check_password_hash(cliente["password"], password):
                 session["cliente_id"] = str(cliente["_id"])
                 session["cliente_nombre"] = cliente["nombre"]
-                flash(f"Bienvenido, {cliente['nombre']}!")
                 return redirect("/tienda")
             else:
                 flash("Contraseña incorrecta.")
