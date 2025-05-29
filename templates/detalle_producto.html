@@ -6,14 +6,7 @@
     <h2>Detalle del Producto</h2>
     <div class="producto-detalle">
         {% if producto.imagen %}
-        <img src="/{{ producto.imagen }}" alt="Imagen de {{ producto.nombre }}" style="max-width:300px; max-height:300px;">
-
-
-
-
-        <!-- <img src="{{ url_for('static', filename= producto.imagen) }}" alt="Imagen de {{ producto.nombre }}" style="max-width:300px; max-height:300px;" > -->
-
-            
+            <img src="/{{ producto.imagen }}" alt="Imagen de {{ producto.nombre }}" style="max-width:300px; max-height:300px;">
         {% else %}
             <p>Sin imagen disponible</p>
         {% endif %}
@@ -29,6 +22,15 @@
             {% endif %}
         </p>
     </div>
+
+    {% if producto.stock > 0 %}
+    <form action="{{ url_for('agregar_al_carrito') }}" method="POST">
+        <input type="hidden" name="producto_id" value="{{ producto.id }}">
+        <button type="submit" class="boton-accion">Agregar al Carrito</button>
+    </form>
+    {% else %}
+        <p>No se puede agregar al carrito porque el producto está agotado.</p>
+    {% endif %}
 
     <div>
         <a href="/productos">
