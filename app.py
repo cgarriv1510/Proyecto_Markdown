@@ -126,7 +126,7 @@ def nuevo_cliente():
 
 @app.route("/clientes_nuevo", methods=["GET"])
 def formulario_nuevo_cliente():
-    return render_template("registro_usuario.html",
+    return render_template("registro_cliente.html",
         pagina="clientes",
         nombre_admin=nombre_admin,
         tienda=tienda,
