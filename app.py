@@ -276,6 +276,7 @@ def nuevo_producto():
     if request.method == "POST":
         nombre = request.form.get("nombre", "").strip()
         categoria = request.form.get("categoria", "").strip()
+        imagen = request.form.get("imagen", "").strip()  # <-- añadir este campo
 
         try:
             precio = float(request.form.get("precio", 0))
@@ -302,11 +303,11 @@ def nuevo_producto():
         if producto_existente:
             productos_coleccion.update_one(
                 {"_id": producto_existente["_id"]},
-                {"$set": {"precio": precio, "stock": stock}}
+                {"$set": {"precio": precio, "stock": stock, "imagen": imagen}}  # añadir imagen aquí
             )
             flash("Producto existente actualizado.")
         else:
-            producto = Producto(nombre=nombre, precio=precio, categoria=categoria, stock=stock)
+            producto = Producto(nombre=nombre, precio=precio, categoria=categoria, stock=stock, imagen=imagen)  # pasar imagen al constructor
             productos_coleccion.insert_one(producto.to_dict())
             flash("Producto añadido correctamente.")
 
@@ -317,6 +318,7 @@ def nuevo_producto():
         nombre_admin=nombre_admin,
         tienda=tienda,
         fecha=fecha)
+
 
 # Tienda pública pagina principal
 @app.route("/tienda")
