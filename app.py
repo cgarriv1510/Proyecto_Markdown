@@ -462,7 +462,9 @@ def agregar_al_carrito():
 
     # Incrementar la cantidad del producto en el carrito
     carrito[producto_id] = cantidad_actual + 1
-
+    #Guardamos el carrito actualizado en la sesión del usuario.
+    # Esto permite que el usuario mantenga su carrito de compras aunque navegue entre diferentes páginas del sitio.
+    # La clave "carrito" dentro del objeto `session` almacenará un diccionario con los IDs de productos y sus cantidades.
     session["carrito"] = carrito
     flash(f"Producto '{producto_data['nombre']}' agregado al carrito.")
     return redirect(request.referrer or "/")
