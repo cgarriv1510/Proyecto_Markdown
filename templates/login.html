@@ -18,14 +18,17 @@
             <button type="submit">Entrar</button>
         </form>
         <p>¿No tienes cuenta? <a href="{{ url_for('registro') }}">Regístrate aquí</a></p>
-        
+        <!-- GUarda el mensaje y los muestra-->
         {% with messages = get_flashed_messages() %}
+        <!-- Si la lista de mensajes no esta vacía  entra en el bucle -->
           {% if messages %}
             <div class="flash-messages">
+              <!-- Itera sobre el mensaje mostrando el mismo  -->
               {% for msg in messages %}
                 <p>{{ msg }}</p>
               {% endfor %}
             </div>
+            <!-- Fin de los bloques -->
           {% endif %}
         {% endwith %}
     </div>

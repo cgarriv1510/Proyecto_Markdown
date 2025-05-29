@@ -1,12 +1,16 @@
+<!--  Herencia de base cliente -->
 {% extends 'base_cliente.html' %}
 
 {% block title %}Catálogo de Productos{% endblock %}
 
 {% block content %}
+<!-- Contenido especifico que decidas tu añadir
+ como una hoja en blanco, espacio reservado-->
     <h2>Catálogo de Productos</h2>
 
     <div class="productos-container">
         {% for producto in productos %}
+        <!-- Bucle for que itera sobre la lista de productos -->
         <div class="producto">
             <!-- Ruta correcta para la imagen, asumiendo que 'producto['imagen']' tiene algo como 'images/producto1.jpg' -->
             <img src="/{{ producto.imagen }}" alt="Imagen de {{ producto.nombre }}" style="max-width:300px; max-height:300px;">
@@ -20,5 +24,6 @@
             </a>
         </div>
         {% endfor %}
+        <!-- Fin de la iteracion del bucle for  -->
     </div>
 {% endblock %}

@@ -85,16 +85,16 @@ class Producto:
         )
 
 # --------------------- #
-
+# RUta inical al login
 @app.route("/")
 def index():
     return redirect("/login")
-
+# Panel de administración / dashboard
 @app.route("/dashboard")
 def pagina_inicio():
     if "cliente_id" not in session:
         return redirect("/login")
-
+     # Obtener datos de productos, clientes, pedidos
     productos = list(productos_coleccion.find())
     total_stock = sum([p["stock"] for p in productos])
 
@@ -141,7 +141,7 @@ def pagina_clientes():
         clientes=clientes,
         clientes_activos=clientes_activos,
         cliente_top=cliente_top)
-
+# Registrar nuevo cliente (POST)
 @app.route("/clientes_nuevo", methods=["POST"])
 def nuevo_cliente():
     nombre = request.form.get("nombre", "").strip()
@@ -165,7 +165,7 @@ def nuevo_cliente():
     clientes_coleccion.insert_one(nuevo.to_dict())
     flash("Cliente registrado correctamente.")
     return redirect("/clientes")
-
+# Mostrar formulario para nuevo cliente (GET)
 @app.route("/clientes_nuevo", methods=["GET"])
 def formulario_nuevo_cliente():
     return render_template("registro_usuario.html",
@@ -173,7 +173,7 @@ def formulario_nuevo_cliente():
         nombre_admin=nombre_admin,
         tienda=tienda,
         fecha=fecha)
-
+# Eliminar un cliente
 @app.route("/eliminar_cliente", methods=["POST"])
 def eliminar_cliente():
     cliente_id = request.form.get("cliente_id")
@@ -192,7 +192,7 @@ def eliminar_cliente():
 
     return redirect("/clientes")
 
-# Pedidos
+# Pedidos de lista de pedidos
 @app.route('/pedidos')
 def pagina_pedidos():
     pagina = "pedidos"
@@ -206,7 +206,7 @@ def pagina_pedidos():
         fecha=fecha,
         pedidos=pedidos,
         ingreso_total=ingreso_total)
-
+# Crear nuevo pedido
 @app.route("/pedidos_nuevo", methods=["GET", "POST"])
 def nuevo_pedido():
     if request.method == "POST":
@@ -228,7 +228,7 @@ def nuevo_pedido():
         tienda=tienda,
         fecha=fecha,
         pagina="pedidos")
-
+# Eliminar pedido
 @app.route("/eliminar_pedido", methods=["POST"])
 def eliminar_pedido():
     pedido_id = request.form.get("pedido_id")
@@ -247,7 +247,7 @@ def eliminar_pedido():
 
     return redirect("/pedidos")
 
-# Productos
+# Listado de Productos
 @app.route('/productos')
 def pagina_productos():
     datos_productos = productos_coleccion.find()
@@ -260,7 +260,7 @@ def pagina_productos():
         nombre_admin=nombre_admin,
         tienda=tienda,
         fecha=fecha)
-
+# Detalle de producto individual
 @app.route('/producto/<producto_id>')
 def detalle_producto(producto_id):
     producto_data = productos_coleccion.find_one({"_id": ObjectId(producto_id)})
@@ -274,7 +274,7 @@ def detalle_producto(producto_id):
         nombre_admin=nombre_admin,
         tienda=tienda,
         fecha=fecha)
-
+# Añadir o actualizar producto
 @app.route("/productos_nuevo", methods=["POST", "GET"])
 def nuevo_producto():
     if request.method == "POST":
@@ -322,7 +322,7 @@ def nuevo_producto():
         tienda=tienda,
         fecha=fecha)
 
-# Tienda pública
+# Tienda pública pagina principal
 @app.route("/tienda")
 def tienda_inicio():
     if "cliente_id" not in session:
@@ -339,10 +339,12 @@ def tienda_inicio():
         categorias=categorias,
         tienda=tienda,
         fecha=fecha)
-
+# Listado de productos para clientes
 @app.route("/tienda/productos")
 def tienda_productos():
+    #Obtenemos los productos desde la colección de la base de datos
     productos = list(productos_coleccion.find())
+    #Le pasamos a la plantilla los productos, la tienda y la fecha
     return render_template("public/productos.html",
         productos=productos,
         tienda=tienda,
@@ -351,20 +353,26 @@ def tienda_productos():
 # LOGIN
 @app.route('/login', methods=["GET", "POST"])
 def login():
+    #El usuario envia el formulario de login
     if request.method == "POST":
+        #Obtenemos los datos del formulario y strip que elimina espacios al principio y al final
         email = request.form.get("email", "").strip()
         password = request.form.get("password", "").strip()
-
+        #Buscamos el cliente en la colección de clientes
         cliente = clientes_coleccion.find_one({"email": email})
+         # Verifica si la contraseña ingresada coincide con la contraseña encriptada almacenada
         if cliente and "password" in cliente:
             if check_password_hash(cliente["password"], password):
+                #Guaramos los datos del cliente en la sesión
                 session["cliente_id"] = str(cliente["_id"])
                 session["cliente_nombre"] = cliente["nombre"]
                 return redirect("/tienda")
             else:
+                #Si la contraseña no coincide, mostramos un mensaje de error
                 flash("Contraseña incorrecta.")
                 return redirect("/login")
         else:
+            #Si el correo no está registrado, mostramos un mensaje de error
             flash("Correo no registrado.")
             return redirect("/login")
     return render_template("login.html")
@@ -372,24 +380,26 @@ def login():
 # REGISTRO
 @app.route('/registro', methods=["GET", "POST"])
 def registro():
+    #Si el usuario envía el formulario de registro
     if request.method == "POST":
+        #Obtenemos los datos del formulario y strip que elimina espacios al principio y al final
         nombre = request.form.get("nombre", "").strip()
         email = request.form.get("email", "").strip()
         password = request.form.get("password", "").strip()
-
+        #Validamos que los campos no estén vacíos
         if not nombre or not email or not password:
             flash("Todos los campos son obligatorios.")
             return redirect("/registro")
-
+        #Validamos que el correo no esté registrado y que la contraseña tenga al menos 8 caracteres
         if clientes_coleccion.find_one({"email": email}):
             flash("Este correo ya está registrado.")
             return redirect("/registro")
         if len(password) < 8:
             flash("La contraseña debe tener al menos 8 caracteres.")
             return redirect("/registro")
-
+        #Encriptamos la contraseña antes de guardarla
         hashed_password = generate_password_hash(password)
-
+        #Creamos un nuevo cliente con los datos del formulario
         nuevo_cliente = {
             "nombre": nombre,
             "email": email,
@@ -397,7 +407,7 @@ def registro():
             "activo": True,
             "pedidos": 0
         }
-
+        #Insertamos el nuevo cliente en la colección de clientes
         clientes_coleccion.insert_one(nuevo_cliente)
         flash("Registro exitoso. Ahora puedes iniciar sesión.")
         return redirect("/login")
@@ -415,7 +425,7 @@ def logout():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
-
+# Agregar producto al carrito
 @app.route("/carrito/agregar", methods=["POST"])
 def agregar_al_carrito():
     if "cliente_id" not in session:
@@ -454,21 +464,26 @@ def agregar_al_carrito():
     session["carrito"] = carrito
     flash(f"Producto '{producto_data['nombre']}' agregado al carrito.")
     return redirect(request.referrer or "/")
-    @app.route("/carrito")
+# Mostrar contenido del carrito
+@app.route("/carrito")
 def mostrar_carrito():
+    # Verificar si el usuario está autenticado
     if "cliente_id" not in session:
         flash("Debes iniciar sesión para ver el carrito.")
         return redirect("/login")
-
+    # Obtener el carrito de la sesión y si no existe, crear uno vacío
     carrito = session.get("carrito", {})
     productos_carrito = []
     total = 0.0
-
+    # Recorre cada producto en el carrito
     for producto_id, cantidad in carrito.items():
+        #Busca los datos del producto en la base de datos usando la id del producto
         producto_data = productos_coleccion.find_one({"_id": ObjectId(producto_id)})
+        #Calcula el subtotal del producto que es el precio por la cantidad 
         if producto_data:
             subtotal = producto_data["precio"] * cantidad
             total += subtotal
+            #Lo agrega a la lista de productos del carrito
             productos_carrito.append({
                 "id": str(producto_data["_id"]),
                 "nombre": producto_data["nombre"],
@@ -476,7 +491,7 @@ def mostrar_carrito():
                 "cantidad": cantidad,
                 "subtotal": subtotal
             })
-
+    #Renderiza la plantilla del carrito con los productos, el total, el nombre del administrador, la tienda y la fecha
     return render_template("carrito.html",
                            productos=productos_carrito,
                            total=total,

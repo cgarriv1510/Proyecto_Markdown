@@ -18,9 +18,13 @@
     <tbody>
         {% for p in productos %}
         <tr>
-            <td>{{ p.nombre }}</td>
+            <!-- Muestra el nombre del producto -->
+            <td>{{ p.nombre }}</td> 
+            <!-- Muestra el precio del producto con 2 decimales -->
             <td>${{ "%.2f"|format(p.precio) }}</td>
+            <!-- Muestra la cantidad del producto -->
             <td>{{ p.cantidad }}</td>
+            <!--  Muestra el subtotal del producto  -->
             <td>${{ "%.2f"|format(p.subtotal) }}</td>
         </tr>
         {% endfor %}
@@ -38,6 +42,7 @@
 <a href="{{ url_for('tienda_inicio') }}">
     <button class="boton-accion">Ir a la tienda</button>
 </a>
+<!--  Cierre del condicional if -->
 {% endif %}
 {% endblock %}
 {#carrito añadido y ruta1#}
