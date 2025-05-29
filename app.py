@@ -417,6 +417,7 @@ def registro():
 # LOGOUT
 @app.route('/logout')
 def logout():
+    # Limpiar la sesión del usuario y elimina los datos de sesión
     session.clear()
     flash("Sesión cerrada correctamente.")
     return redirect("/login")
@@ -431,7 +432,7 @@ def agregar_al_carrito():
     if "cliente_id" not in session:
         flash("Debes iniciar sesión para agregar productos al carrito.")
         return redirect("/login")
-
+    # Obtener el ID del producto desde el formulario
     producto_id = request.form.get("producto_id")
     if not producto_id:
         flash("No se especificó el producto para agregar.")
@@ -446,6 +447,7 @@ def agregar_al_carrito():
     stock_disponible = producto_data.get("stock", 0)
     if stock_disponible <= 0:
         flash("El producto está agotado.")
+        #Te redirige a la página anterior o a la raíz si no hay referencia
         return redirect(request.referrer or "/")
 
     # Obtener carrito actual de la sesión o crear uno nuevo

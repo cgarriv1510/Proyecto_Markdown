@@ -20,7 +20,7 @@
         <p>¿No tienes cuenta? <a href="{{ url_for('registro') }}">Regístrate aquí</a></p>
         <!-- GUarda el mensaje y los muestra-->
         {% with messages = get_flashed_messages() %}
-        <!-- Si la lista de mensajes no esta vacía  entra en el bucle -->
+        <!-- Si la lista de mensajes no esta vacía  entra en el condicional -->
           {% if messages %}
             <div class="flash-messages">
               <!-- Itera sobre el mensaje mostrando el mismo  -->
