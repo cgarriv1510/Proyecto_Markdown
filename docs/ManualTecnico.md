@@ -176,18 +176,9 @@ Cada uno de los templates extiende de `base_cliente.html` y sobrescribe los bloq
 **Descripción:**  
 Página de **inicio de la tienda online**. Muestra un mensaje de bienvenida, una breve descripción de la tienda y un acceso directo al catálogo de productos.  
 
-**Bloques sobrescritos:**  
-- `content`  
-
-**Variables esperadas:**  
-- `tienda`: nombre de la tienda.  
-
-**Funciones backend relacionadas:**  
-- `tienda_productos`: redirige al catálogo general.  
-
 **Comportamiento:**  
 1. Encabezado de bienvenida con el nombre de la tienda.  
-2. Descripción introductoria.  
+2. Descripción.  
 3. Botón de acceso al catálogo de productos.  
 4. Imagen ilustrativa de portada.  
 
@@ -208,12 +199,9 @@ Muestra el **detalle de un producto específico** con información como imagen, 
   - `stock`  
   - `imagen` (opcional)  
 
-**Funciones backend relacionadas:**  
-- `agregar_al_carrito`: añade el producto al carrito.  
-- `tienda_productos`: redirige al catálogo.  
 
 **Que hace:**  
-1. Muestra imagen o mensaje alternativo.  
+1. Muestra imagen.  
 2. Despliega datos principales del producto.  
 3. Si hay stock, muestra botón **Agregar al Carrito**; si no, indica que está agotado.  
 4. Botón para volver al catálogo.  
@@ -260,9 +248,6 @@ Este template corresponde al **catálogo general de productos** de la tienda. Mu
   - `precio`: precio unitario.  
   - `stock`: unidades disponibles.  
   - `imagen`: ruta/URL de la imagen.  
-
-**Funciones backend relacionadas:**  
-- `tienda_detalle_producto`: recibe el `producto_id` y muestra el detalle de un producto específico.  
 
 **Que hace:**  
 1. Muestra un encabezado de *“Catálogo de Productos”*.  
