@@ -1,23 +1,19 @@
 # Proyecto Markdown - Tienda Online
 
-Este proyecto es una aplicación web para la gestión y visualización de productos en una tienda online. Permite registrar clientes, gestionar pedidos y productos, y realizar compras desde una interfaz intuitiva.
+Este proyecto es una aplicacion web para la gestion y visualizacion de productos en una tienda online. Permite registrar clientes, gestionar pedidos y productos, y realizar compras desde una interfaz intuitiva.
 
-# Características principales
+# Caracteristicas principales
 
 - Registro y autenticación de clientes.
-- Gestión de productos (alta, baja, modificación).
+- Gestion de productos (alta, baja, modificacion).
 - Carrito de compras y pedidos.
-- Panel de administración para visualizar pedidos y usuarios.
+- Panel de administracion para visualizar pedidos y usuarios.
 - Interfaz responsive.
 
 # Estructura del proyecto
-
 ```bash
+-------------------------------------------------------------------------------------------------------------------------------------------
 Proyecto_Markdown/
-├── .git/                  # Archivos de control de Git
-├── .gitignore
-├── .gitignore.temp
-│
 ├── .idea/                 # Configuración de IDE (IntelliJ/PyCharm)
 │   ├── Proyecto_Final.iml
 │   ├── modules.xml
@@ -78,3 +74,4 @@ Proyecto_Markdown/
 │       ├── detalle_producto.html
 │       ├── inicio.html
 │       └── productos.html
+-------------------------------------------------------------------------------------------------------------------------------------------
