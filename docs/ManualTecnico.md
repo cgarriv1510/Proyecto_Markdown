@@ -22,7 +22,7 @@ El administrador puede gestionar clientes, productos y pedidos.
 1. Clona el repositorio:
 
 ```bash
-git clone https://github.com/usuario/tecknomarket.git
+git clone https://github.com/osquerm/tecknomarket.git
 cd tecknomarket
 ```
 ## Como crear el entorno virtual:
@@ -69,7 +69,7 @@ python app.py
 ## Rutas de Clientes
 
 | Ruta | Método | Descripción |
-|------|--------|-------------|
+
 | `/clientes` | GET | Muestra la lista de clientes registrados y estadísticas (clientes activos, cliente top). |
 | `/clientes_nuevo` | GET | Muestra el formulario para registrar un nuevo cliente. |
 | `/clientes_nuevo` | POST | Recibe los datos del formulario y crea un nuevo cliente en la base de datos. |
