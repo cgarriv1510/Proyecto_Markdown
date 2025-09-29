@@ -80,7 +80,7 @@ python app.py
 ## Rutas de Pedidos
 
 | Ruta | Método | Descripción |
-|------|--------|-------------|
+
 | `/pedidos` | GET | Muestra la lista de pedidos realizados, con detalle de productos y total de ingresos. |
 | `/pedidos_nuevo` | GET | Muestra el formulario para crear un nuevo pedido. |
 | `/pedidos_nuevo` | POST | Crea un nuevo pedido con los datos recibidos del formulario. |
@@ -91,7 +91,7 @@ python app.py
 ## Rutas de Productos
 
 | Ruta | Método | Descripción |
-|------|--------|-------------|
+
 | `/productos` | GET | Muestra la lista de productos con su stock total. |
 | `/producto/<producto_id>` | GET | Muestra el detalle de un producto específico. |
 | `/productos_nuevo` | GET | Muestra el formulario para agregar un nuevo producto. |
@@ -102,7 +102,7 @@ python app.py
 ## Rutas de la tienda pública
 
 | Ruta | Método | Descripción |
-|------|--------|-------------|
+
 | `/tienda` | GET | Muestra la tienda principal con todos los productos. Permite filtrar por categoría. |
 | `/tienda/productos` | GET | Muestra todos los productos disponibles en la tienda. |
 | `/tienda/producto/<producto_id>` | GET | Muestra el detalle de un producto en la tienda pública. |
@@ -112,7 +112,7 @@ python app.py
 ## Rutas de autenticación
 
 | Ruta | Método | Descripción |
-|------|--------|-------------|
+
 | `/login` | GET | Muestra el formulario de login. |
 | `/login` | POST | Valida el correo y contraseña del cliente y crea la sesión. |
 | `/registro` | GET | Muestra el formulario de registro de cliente. |
@@ -124,7 +124,7 @@ python app.py
 ## Rutas del carrito
 
 | Ruta | Método | Descripción |
-|------|--------|-------------|
+
 | `/carrito` | GET | Muestra los productos agregados al carrito y el total. |
 | `/carrito/agregar` | POST | Agrega un producto al carrito de la sesión, controlando el stock disponible. |
 | `/carrito/eliminar` | POST | Elimina un producto del carrito. |
@@ -135,7 +135,7 @@ python app.py
 ## Rutas de error
 
 | Ruta | Método | Descripción |
-|------|--------|-------------|
+
 | `404` | GET | Página de error cuando la ruta no existe. |
 # Clases
 
