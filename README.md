@@ -37,7 +37,7 @@ Proyecto_Markdown/
 │   └── productos.py
 │
 ├── plan_entorno_cliente.md
-├── productos.json      # Datos de productos
+├── productos.json         # Datos de productos
 ├── README.md              # Documentación principal
 ├── requirements.txt       # Dependencias del proyecto
 │
