@@ -10,6 +10,11 @@ Este proyecto es una aplicacion web para la gestion y visualizacion de productos
 - Panel de administracion para visualizar pedidos y usuarios.
 - Interfaz responsive.
 
+# Tecnologías utilizadas
+- [Python](https://www.python.org/) – Lenguaje principal.
+- [Flask](https://flask.palletsprojects.com/) – Framework de Python.
+- [MySQL](https://www.mysql.com/) – Base de datos.
+
 # Estructura del proyecto
 ```bash
 -------------------------------------------------------------------------------------------------------------------------------------------
